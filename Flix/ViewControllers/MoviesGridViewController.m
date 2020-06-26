@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSArray *movies;
 @property (strong, nonatomic) NSArray *filteredMovies;
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;//outlet to collection view in storyboard
 @end
 
@@ -32,6 +33,9 @@
     CGFloat itemWidth = (self.collectionView.frame.size.width - layout.minimumInteritemSpacing * (postersPerLine - 1) - layout.sectionInset.left*2) / postersPerLine;
     CGFloat itemHeight = itemWidth * 1.5;
     layout.itemSize = CGSizeMake(itemWidth, itemHeight);
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(fetchMovies) forControlEvents:UIControlEventValueChanged];
+    [self.collectionView addSubview:self.refreshControl];
     
 }
 
@@ -65,7 +69,7 @@
                self.filteredMovies = self.movies;
                [self.collectionView reloadData];
            }
-        
+        [self.refreshControl endRefreshing];
        }];
     [task resume];
 }

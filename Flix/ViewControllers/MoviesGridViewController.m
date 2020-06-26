@@ -1,48 +1,42 @@
 //
-//  MoviesViewController.m
+//  MoviesGridViewController.m
 //  Flix
 //
-//  Created by Carmen Gutierrez on 6/24/20.
+//  Created by Carmen Gutierrez on 6/25/20.
 //  Copyright © 2020 Carmen Gutierrez. All rights reserved.
 //
 
-#import "MoviesViewController.h"
-#import "MovieCell.h"
+#import "MoviesGridViewController.h"
+#import "MovieCollectionCell.h"
 #import "UIIMageView+AFNetworking.h"
 #import "DetailsViewController.h"
 
-@interface MoviesViewController () <UITableViewDataSource, UITableViewDelegate> //step 2: Letting MoviesViewController know that we implemented the two interfaces that the tableView expects
-
-@property (weak, nonatomic) IBOutlet UITableView *tableView; //step 1: created an outlet for the TableView so that we can refer to it.
-
+@interface MoviesGridViewController () <UICollectionViewDataSource, UICollectionViewDelegate> //tells us that we will implement the datasource and delegate for collections
 @property (nonatomic, strong) NSArray *movies;
 @property (strong, nonatomic) NSArray *filteredMovies;
-@property (nonatomic, strong) UIRefreshControl *refreshControl;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
-
-
-
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;//outlet to collection view in storyboard
 @end
 
-@implementation MoviesViewController //in this line of code, MoviesViewController is passed into the implementation of the functions below.
+@implementation MoviesGridViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.tableView.dataSource = self; //we are telling viewDidLoad to make the tableView data source to be the MoviesViewController that we passed in in line 19
-    self.tableView.delegate = self; //we are telling viewDidLoad to make the tableView delegate to be the MoviesViewController that we passed in in line 19
+    // Do any additional setup after loading the view.
+    self.collectionView.dataSource = self;
+    self.collectionView.delegate = self;
     self.searchBar.delegate = self;
-    
     [self fetchMovies];
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    [self.refreshControl addTarget:self action:@selector(fetchMovies) forControlEvents:UIControlEventValueChanged];
-    [self.tableView addSubview:self.refreshControl];
+    UICollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
+    CGFloat postersPerLine = 3;
+    CGFloat itemWidth = (self.collectionView.frame.size.width - layout.minimumInteritemSpacing * (postersPerLine - 1) - layout.sectionInset.left*2) / postersPerLine;
+    CGFloat itemHeight = itemWidth * 1.5;
+    layout.itemSize = CGSizeMake(itemWidth, itemHeight);
     
 }
+
 - (void)fetchMovies {
     // Do any additional setup after loading the view.
-    [self.activityIndicator startAnimating];
     NSURL *url = [NSURL URLWithString:@"https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:nil delegateQueue:[NSOperationQueue mainQueue]];
@@ -67,34 +61,17 @@
            }
            else {
                NSDictionary *dataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-               NSLog(@"%@", dataDictionary);
                self.movies = dataDictionary[@"results"];
                self.filteredMovies = self.movies;
-               for (NSDictionary *movie in self.movies){
-                   NSLog(@"%@", movie[@"title"]);
-               }
-               [self.tableView reloadData];
+               [self.collectionView reloadData];
            }
-        [self.refreshControl endRefreshing];
-        [self.activityIndicator stopAnimating];
+        
        }];
     [task resume];
 }
-//numberOfRowsInSection tells us how many rows we have in the data movies created in line 15.
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.filteredMovies.count;
-    
-}
-
-//cellForRowAtIndexPath creates and configures cells for different index paths
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath { //this function takes in a NSIndexPath by reference called indexPath
-    //creation of cell (done for each movie)
-    MovieCell *cell = [tableView dequeueReusableCellWithIdentifier: @"MovieCell"];
-    //lets movie be one of the dictionaries in the array movies defined in line 15, then labels the cell created above to have the title provided in that movie dictionary.
-    NSDictionary *movie = self.filteredMovies[indexPath.row];
-    cell.titleLabel.text = movie[@"title"]; // @"title" accesses the title part of the dictionary movie.
-    cell.overviewLabel.text = movie[@"overview"];
-    
+- (UICollectionViewCell *)collectionView:(nonnull UICollectionView *) collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    MovieCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MovieCollectionCell" forIndexPath:indexPath];
+    NSDictionary *movie = self.filteredMovies[indexPath.item];
     NSString *baseURLString = @"https://image.tmdb.org/t/p/w500";
     NSString *posterURLString = movie[@"poster_path"];
     NSString *fullPosterURLString = [baseURLString stringByAppendingString:posterURLString];
@@ -102,6 +79,9 @@
     cell.posterView.image = nil;
     [cell.posterView setImageWithURL:posterURL];
     return cell;
+}
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.filteredMovies.count;
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     
@@ -119,7 +99,7 @@
         self.filteredMovies = self.movies;
     }
     
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
  
 }
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
@@ -137,14 +117,11 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    
     UITableViewCell *tappedCell =sender;
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
-    NSDictionary *movie = self.movies[indexPath.row];
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:tappedCell];
+    NSDictionary *movie = self.movies[indexPath.item];
     DetailsViewController *detailsViewController =  [segue destinationViewController];
     detailsViewController.movie = movie;
-    
-
 }
 
 

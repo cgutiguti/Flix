@@ -33,7 +33,7 @@
     self.tableView.dataSource = self; //we are telling viewDidLoad to make the tableView data source to be the MoviesViewController that we passed in in line 19
     self.tableView.delegate = self; //we are telling viewDidLoad to make the tableView delegate to be the MoviesViewController that we passed in in line 19
     self.searchBar.delegate = self;
-    
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
     [self fetchMovies];
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(fetchMovies) forControlEvents:UIControlEventValueChanged];

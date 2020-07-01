@@ -21,6 +21,7 @@
 		9B3008B824A3BDA000337C1F /* MoviesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3008B724A3BDA000337C1F /* MoviesViewController.m */; };
 		9B35DB3A24A5257600942719 /* MoviesGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B35DB3924A5257600942719 /* MoviesGridViewController.m */; };
 		9B35DB4024A531F800942719 /* MovieCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B35DB3F24A531F800942719 /* MovieCollectionCell.m */; };
+		9B35DB4324A679F400942719 /* SavedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B35DB4224A679F400942719 /* SavedViewController.m */; };
 		9BD5114724A3E90F00560AB8 /* MovieCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BD5114624A3E90F00560AB8 /* MovieCell.m */; };
 		9BD5114A24A3FFBF00560AB8 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BD5114924A3FFBF00560AB8 /* DetailsViewController.m */; };
 /* End PBXBuildFile section */
@@ -70,6 +71,8 @@
 		9B35DB3924A5257600942719 /* MoviesGridViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoviesGridViewController.m; sourceTree = "<group>"; };
 		9B35DB3E24A531F800942719 /* MovieCollectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieCollectionCell.h; sourceTree = "<group>"; };
 		9B35DB3F24A531F800942719 /* MovieCollectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MovieCollectionCell.m; sourceTree = "<group>"; };
+		9B35DB4124A679F400942719 /* SavedViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SavedViewController.h; sourceTree = "<group>"; };
+		9B35DB4224A679F400942719 /* SavedViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SavedViewController.m; sourceTree = "<group>"; };
 		9BD5114524A3E90F00560AB8 /* MovieCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieCell.h; sourceTree = "<group>"; };
 		9BD5114624A3E90F00560AB8 /* MovieCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MovieCell.m; sourceTree = "<group>"; };
 		9BD5114824A3FFBF00560AB8 /* DetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
@@ -207,6 +210,8 @@
 				9BD5114924A3FFBF00560AB8 /* DetailsViewController.m */,
 				9B35DB3824A5257600942719 /* MoviesGridViewController.h */,
 				9B35DB3924A5257600942719 /* MoviesGridViewController.m */,
+				9B35DB4124A679F400942719 /* SavedViewController.h */,
+				9B35DB4224A679F400942719 /* SavedViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -465,6 +470,7 @@
 				9BD5114A24A3FFBF00560AB8 /* DetailsViewController.m in Sources */,
 				9B35DB4024A531F800942719 /* MovieCollectionCell.m in Sources */,
 				9B30089424A3B9FE00337C1F /* main.m in Sources */,
+				9B35DB4324A679F400942719 /* SavedViewController.m in Sources */,
 				9B35DB3A24A5257600942719 /* MoviesGridViewController.m in Sources */,
 				9B30088624A3B9FD00337C1F /* SceneDelegate.m in Sources */,
 			);
